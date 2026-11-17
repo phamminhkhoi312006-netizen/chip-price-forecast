@@ -2,6 +2,10 @@
 
 Demo: dự báo giá chip DRAM/NAND bằng Random Forest & XGBoost (dùng lại `demo_core.py`).
 
+- **Repo**: https://github.com/phamminhkhoi312006-netizen/chip-price-forecast
+- **Deploy một-bấm**: https://share.streamlit.io/deploy?repository=phamminhkhoi312006-netizen/chip-price-forecast&branch=main&mainModule=streamlit_app.py
+  (cần đăng nhập Streamlit Cloud bằng GitHub lần đầu, sau đó bấm **Deploy**)
+
 ## 1. Chạy thử ở máy
 
 ```bash
