@@ -1,0 +1,5 @@
+,params
+dram/RandomForest,"{'n_estimators': 100, 'min_samples_leaf': 2, 'max_features': 0.3, 'max_depth': 3}"
+dram/XGBoost,"{'subsample': 0.85, 'reg_lambda': 5, 'min_child_weight': 2, 'max_depth': 4, 'learning_rate': 0.05, 'colsample_bytree': 0.5, 'n_estimators': 1}"
+nand/RandomForest,"{'n_estimators': 300, 'min_samples_leaf': 3, 'max_features': 0.3, 'max_depth': 4}"
+nand/XGBoost,"{'subsample': 0.7, 'reg_lambda': 10, 'min_child_weight': 3, 'max_depth': 4, 'learning_rate': 0.03, 'colsample_bytree': 0.5, 'n_estimators': 1}"
