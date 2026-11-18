@@ -71,6 +71,9 @@ Không cần secrets hay biến môi trường: app đọc dữ liệu trong `da
 
 ## 6. Ghi chú nội dung
 
-Chỉ có tham số tinh chỉnh sẵn cho `h = 1` (`results/`) và `h = 3` (`results_h3/`).
+Đã có tham số tinh chỉnh sẵn cho `h = 1` (`results/`), `h = 3` (`results_h3/`) và `h = 12`
+(`results_h12/`), kèm `metrics.csv` + `forecast.csv` tương ứng.
 Chọn mốc khác, app dùng tham số mặc định trong `demo_core.DEFAULTS` và hiện cảnh báo trên sidebar.
 Muốn tinh chỉnh thêm: chạy `HORIZON=<h> python train_models.py` rồi push thư mục `results_h<h>/`.
+Cache của app được khóa theo mtime các file trong `results*/`, nên push kết quả mới là app tự tính lại —
+không cần bấm Clear cache.

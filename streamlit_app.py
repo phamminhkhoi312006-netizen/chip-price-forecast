@@ -44,24 +44,32 @@ def data_range():
 
 
 @st.cache_data(show_spinner="Đang huấn luyện mô hình…")
-def get_results(horizon: int):
+def get_results(horizon: int, stamp: int):
     return dc.get_results(horizon)
 
 
 @st.cache_data
-def load_metrics(horizon: int):
+def load_metrics(horizon: int, stamp: int):
     path = results_dir(horizon) / "metrics.csv"
     return pd.read_csv(path) if path.exists() else None
 
 
 @st.cache_data(show_spinner="Đang chạy backtest…")
-def run_backtest(horizon: int, n_last: int):
-    res = get_results(horizon)
+def run_backtest(horizon: int, n_last: int, stamp: int):
+    res = get_results(horizon, stamp)
     return {name: dc.backtest_table(r, name, n_last=n_last) for name, r in res.items()}
 
 
 def results_dir(horizon: int):
     return tm.base_dir / ("results" if horizon == 1 else f"results_h{horizon}")
+
+
+def results_stamp(horizon: int) -> int:
+    """mtime mới nhất trong results*/ — đổi file kết quả là cache tự làm mới."""
+    folder = results_dir(horizon)
+    if not folder.exists():
+        return 0
+    return max((p.stat().st_mtime_ns for p in folder.glob("*")), default=0)
 
 
 def fmt(value: float) -> str:
@@ -184,7 +192,7 @@ st.warning(
 )
 
 try:
-    results = get_results(horizon)
+    results = get_results(horizon, results_stamp(horizon))
 except Exception as exc:  # noqa: BLE001 - hiển thị lỗi thân thiện trên UI
     st.error(f"Không chạy được mô hình: {exc}")
     st.stop()
@@ -259,7 +267,7 @@ with tab_forecast:
 
 # ----------------------------- TAB 2: HIỆU NĂNG -----------------------------
 with tab_metrics:
-    metrics = load_metrics(horizon)
+    metrics = load_metrics(horizon, results_stamp(horizon))
     if metrics is None:
         st.info(
             f"Chưa có `metrics.csv` cho h={horizon}. "
@@ -328,8 +336,9 @@ with tab_backtest:
     if st.button("Chạy backtest", type="primary"):
         st.session_state["backtest_done"] = True
     if st.session_state.get("backtest_done"):
+        backtests = run_backtest(horizon, n_last, results_stamp(horizon))
         for name, res in results.items():
-            bt = run_backtest(horizon, n_last).get(name)
+            bt = backtests.get(name)
             st.markdown(f"#### {CHIP_ICON[name]} {dc.dc_label(name)}")
             if bt is None or bt.empty:
                 st.info("Không đủ dữ liệu để backtest.")
